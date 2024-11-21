@@ -47,13 +47,17 @@ public class FruitAdapter  extends RecyclerView.Adapter<FruitAdapter.ViewHolder>
         holder.binding.tvName.setText(fruit.getName());
         holder.binding.tvPriceQuantity.setText("price :" +fruit.getPrice()+" - quantity:" +fruit.getQuantity());
         holder.binding.tvDes.setText(fruit.getDescription());
-        String url  = fruit.getImage().get(0);
-        String newUrl = url.replace("localhost", "10.0.2.2");
-        Glide.with(context)
-                .load(newUrl)
-                .thumbnail(Glide.with(context).load(R.drawable.baseline_broken_image_24))
-                .into(holder.binding.img);
-        Log.d("321321", "onBindViewHolder: "+list.get(position).getImage().get(0));
+
+        if (fruit.getImage() != null && !fruit.getImage().isEmpty()) {
+            String url  = fruit.getImage().get(0);
+            String newUrl = url.replace("localhost", "10.0.2.2");
+            Glide.with(context)
+                    .load(newUrl)
+                    .thumbnail(Glide.with(context).load(R.drawable.baseline_broken_image_24))
+                    .into(holder.binding.img);
+            Log.d("321321", "onBindViewHolder: "+list.get(position).getImage().get(0));
+        }
+
     }
 
 
