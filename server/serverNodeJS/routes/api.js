@@ -96,36 +96,44 @@ router.post('/add-furit', async (req, res) => {
 
 
 router.get('/get-list-fruit', async (req, res, next) => {
-    const authHeader = req.headers['authorization'];
-    console.log(authHeader);
-    if (!authHeader) {
-        return res.sendStatus(401); // Kiểm tra xem header Authorization có tồn tại không
-    }
 
-    const token = authHeader.split(' ')[1];
-
-    if (!token) {
-        return res.sendStatus(401); // Kiểm tra xem token có tồn tại không
-    }
-
-    try {
-        const payload = JWT.verify(token, SECRETKEY); // Xác thực token
-        console.log(payload);
-
-        const data = await Furits.find().populate('id_distributor');
+    const data = await Furits.find().populate('id_distributor');
         res.json({
             "status": 200,
             "message": 'Danh sách fruit',
             "data": data
         });
-    } catch (error) {
-        if (error instanceof JWT.TokenExpiredError) {
-            return res.sendStatus(401); // Token hết hạn
-        } else {
-            console.error(error);
-            return res.sendStatus(403); // Lỗi xác thực
-        }
-    }
+        
+    // const authHeader = req.headers['authorization'];
+    // console.log(authHeader);
+    // if (!authHeader) {
+    //     return res.sendStatus(401); // Kiểm tra xem header Authorization có tồn tại không
+    // }
+
+    // const token = authHeader.split(' ')[1];
+
+    // if (!token) {
+    //     return res.sendStatus(401); // Kiểm tra xem token có tồn tại không
+    // }
+
+    // try {
+    //     const payload = JWT.verify(token, SECRETKEY); // Xác thực token
+    //     console.log(payload);
+
+    //     const data = await Furits.find().populate('id_distributor');
+    //     res.json({
+    //         "status": 200,
+    //         "message": 'Danh sách fruit',
+    //         "data": data
+    //     });
+    // } catch (error) {
+    //     if (error instanceof JWT.TokenExpiredError) {
+    //         return res.sendStatus(401); // Token hết hạn
+    //     } else {
+    //         console.error(error);
+    //         return res.sendStatus(403); // Lỗi xác thực
+    //     }
+    // }
 });
 
 //get fruits by id
@@ -512,48 +520,50 @@ router.get('/search-distributor', async (req, res) => {
 //lab 7
 //load more
 router.get('/get-page-fruit', async (req, res) => {
+
+    res.redirect('./get-list-fruit')
     //Auten
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-    if (token == null) return res.sendStatus(401)
-    let payload;
-    JWT.verify(token, SECRETKEY, (err, _payLoad) => {
-        if (err instanceof JWT.TokenExpiredError) return res.sendStatus(401)
-        if (err) return res.sendStatus(403)
-        payload = _payLoad
-    })
-    let perPage = 6;
-    let page = req.query.page || 1;
-    let skip = (perPage * page) - perPage;
-    let count = await Furits.find().count();
-    const name = { "$regex": req.query.name ?? "", "$options": "i" }
+    // const authHeader = req.headers['authorization'];
+    // const token = authHeader && authHeader.split(' ')[1];
+    // if (token == null) return res.sendStatus(401)
+    // let payload;
+    // JWT.verify(token, SECRETKEY, (err, _payLoad) => {
+    //     if (err instanceof JWT.TokenExpiredError) return res.sendStatus(401)
+    //     if (err) return res.sendStatus(403)
+    //     payload = _payLoad
+    // })
+    // let perPage = 6;
+    // let page = req.query.page || 1;
+    // let skip = (perPage * page) - perPage;
+    // let count = await Furits.find().count();
+    // const name = { "$regex": req.query.name ?? "", "$options": "i" }
 
-    const price = { $gte: req.query.price ?? 0 }
-    console.log(222, typeof (req.query.sort));
+    // const price = { $gte: req.query.price ?? 0 }
+    // console.log(222, typeof (req.query.sort));
 
-    const sort = { price: Number(req.query.sort) ?? 1 }
-    try {
-        console.log(1111111, name + "price" + req.query.sort);
-        const data = await Furits.find({ name: name, price: price })
-            .populate('id_distributor')
-            .sort(sort)
-            .skip(skip)
-            .limit(perPage)
-        res.json({
-            "status": 200,
-            "messenger": "Danh sách fruit",
-            "data": {
-                "data": data,
-                "currentPage": Number(page),
-                "totalPage": Math.ceil(count / perPage)
-            }
-        }
-        )
+    // const sort = { price: Number(req.query.sort) ?? 1 }
+    // try {
+    //     console.log(1111111, name + "price" + req.query.sort);
+    //     const data = await Furits.find({ name: name, price: price })
+    //         .populate('id_distributor')
+    //         .sort(sort)
+    //         .skip(skip)
+    //         .limit(perPage)
+    //     res.json({
+    //         "status": 200,
+    //         "messenger": "Danh sách fruit",
+    //         "data": {
+    //             "data": data,
+    //             "currentPage": Number(page),
+    //             "totalPage": Math.ceil(count / perPage)
+    //         }
+    //     }
+    //     )
 
-    } catch (err) {
-        console.log(err);
+    // } catch (err) {
+    //     console.log(err);
 
-    }
+    // }
 })
 
 
