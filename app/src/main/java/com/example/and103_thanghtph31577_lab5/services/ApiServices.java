@@ -66,7 +66,8 @@ public interface ApiServices {
                                                 );
 
 
-
+    @DELETE("destroy-fruit-by-id/{id}")
+    Call<Response<ArrayList<Fruit>>> deleteFruit(@Path("id") String id);
 
 
 

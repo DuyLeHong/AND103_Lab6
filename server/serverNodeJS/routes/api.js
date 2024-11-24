@@ -272,11 +272,15 @@ router.delete('/destroy-fruit-by-id/:id', async (req, res) => {
     try {
         const { id } = req.params
         const result = await Furits.findByIdAndDelete(id);
+
+        console.log(result)
+
+        const newListFruits = await Furits.find().populate('id_distributor');
         if (result) {
             res.json({
                 "status": 200,
                 "messenger": "Xóa thành công",
-                "data": result
+                "data": newListFruits
             })
         } else {
             res.json({

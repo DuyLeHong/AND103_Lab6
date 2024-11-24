@@ -58,6 +58,20 @@ public class FruitAdapter  extends RecyclerView.Adapter<FruitAdapter.ViewHolder>
             Log.d("321321", "onBindViewHolder: "+list.get(position).getImage().get(0));
         }
 
+        holder.binding.btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fruitClick.delete(fruit);
+            }
+        });
+
+        holder.binding.btnEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
     }
 
 

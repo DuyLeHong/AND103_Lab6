@@ -3,10 +3,12 @@ package com.example.and103_thanghtph31577_lab5.view;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -78,6 +80,35 @@ public class HomeActivity extends AppCompatActivity implements FruitAdapter.Frui
 
     @Override
     public void delete(Fruit fruit) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Confirm delete");
+        builder.setMessage("Are you sure you want to delete?");
+        builder.setPositiveButton("yes", (dialog, which) -> {
+            httpRequest.callAPI()
+                    .deleteFruit(fruit.get_id())
+                    .enqueue(new Callback<Response<ArrayList<Fruit>>>() {
+                        @Override
+                        public void onResponse(Call<Response<ArrayList<Fruit>>> call, retrofit2.Response<Response<ArrayList<Fruit>>> response) {
+                            if (response.isSuccessful()) {
+                                if (response.body().getStatus() ==200) {
+                                    ArrayList<Fruit> ds = response.body().getData();
+                                    getData(ds);
+//                    Toast.makeText(HomeActivity.this, response.body().getMessenger(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Response<ArrayList<Fruit>>> call, Throwable t) {
+                            Log.e("mess", t.getMessage());
+                        }
+                    });
+        });
+        builder.setNegativeButton("no", (dialog, which) -> {
+            dialog.dismiss();
+        });
+        builder.show();
+
 
     }
 
